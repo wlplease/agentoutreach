@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
 
 const plans = [
   {
@@ -14,7 +17,7 @@ const plans = [
       "Weekly performance report",
       "Basic targeting",
     ],
-    cta: "Start Free Trial",
+    cta: "Get Started",
     popular: false,
   },
   {
@@ -32,7 +35,7 @@ const plans = [
       "Conversion tracking",
       "Dedicated Slack support",
     ],
-    cta: "Start Free Trial",
+    cta: "Get Started",
     popular: true,
   },
   {
@@ -50,7 +53,7 @@ const plans = [
       "API access",
       "White-glove onboarding",
     ],
-    cta: "Talk to Us",
+    cta: "Contact Sales",
     popular: false,
   },
 ];
@@ -66,17 +69,21 @@ const platforms = [
 const stats = [
   { value: "24/7", label: "Always On" },
   { value: "10x", label: "Cheaper Than Humans" },
-  { value: "6", label: "Platforms Covered" },
+  { value: "5+", label: "Platforms" },
   { value: "<5min", label: "Setup Time" },
+  { value: "USDC", label: "Pay on Solana" },
+  { value: "$0", label: "Setup Fee" },
 ];
 
 export default function Home() {
+  const [mobileMenu, setMobileMenu] = useState(false);
+
   return (
     <div className="min-h-screen mesh-bg">
       {/* Nav */}
       <nav className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="text-xl font-black tracking-tight">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 sm:h-16 flex items-center justify-between">
+          <div className="text-lg sm:text-xl font-black tracking-tight">
             Agent<span className="gradient-text">Outreach</span>
           </div>
           <div className="hidden md:flex items-center gap-8">
@@ -90,36 +97,63 @@ export default function Home() {
               Dashboard
             </Link>
           </div>
+          {/* Mobile menu button */}
+          <button
+            className="md:hidden text-muted p-2 -mr-2"
+            onClick={() => setMobileMenu(!mobileMenu)}
+          >
+            <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+              {mobileMenu ? (
+                <><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></>
+              ) : (
+                <><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></>
+              )}
+            </svg>
+          </button>
         </div>
+        {/* Mobile dropdown */}
+        {mobileMenu && (
+          <div className="md:hidden border-t border-border bg-background/95 backdrop-blur-xl px-4 py-4 flex flex-col gap-3">
+            <a href="#how" onClick={() => setMobileMenu(false)} className="text-sm text-muted py-2">How It Works</a>
+            <a href="#platforms" onClick={() => setMobileMenu(false)} className="text-sm text-muted py-2">Platforms</a>
+            <a href="#pricing" onClick={() => setMobileMenu(false)} className="text-sm text-muted py-2">Pricing</a>
+            <Link
+              href="/dashboard"
+              className="text-sm font-semibold px-5 py-3 rounded-lg bg-gradient-to-r from-accent to-accent2 text-white text-center"
+            >
+              Dashboard
+            </Link>
+          </div>
+        )}
       </nav>
 
       {/* Hero */}
-      <section className="pt-32 pb-20 px-6">
+      <section className="pt-20 sm:pt-32 pb-16 sm:pb-20 px-4 sm:px-6">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-green/20 bg-green/5 text-green text-xs font-semibold font-mono tracking-wide mb-10 animate-fade-up">
-            <span className="w-2 h-2 rounded-full bg-green animate-pulse" />
+          <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full border border-green/20 bg-green/5 text-green text-[10px] sm:text-xs font-semibold font-mono tracking-wide mb-8 sm:mb-10 animate-fade-up">
+            <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-green animate-pulse" />
             AUTONOMOUS AI SALES AGENTS ON SOLANA
           </div>
-          <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-[1.05] mb-6 animate-fade-up delay-100" style={{ opacity: 0 }}>
+          <h1 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter leading-[1.05] mb-5 sm:mb-6 animate-fade-up delay-100" style={{ opacity: 0 }}>
             Your project deserves<br />
             <span className="gradient-text">customers, not tweets</span>
           </h1>
-          <p className="text-lg md:text-xl text-muted max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-up delay-200" style={{ opacity: 0 }}>
+          <p className="text-base sm:text-lg md:text-xl text-muted max-w-2xl mx-auto mb-8 sm:mb-10 leading-relaxed animate-fade-up delay-200 px-2" style={{ opacity: 0 }}>
             AI agents that find, qualify, and engage your ideal customers across Moltbook, Farcaster, X, and Discord.
-            Replace your $10k/mo marketing spend. Set up in 5 minutes. Pay with USDC via x402.
+            Replace your $10k/mo marketing spend. Pay with USDC on Solana.
           </p>
-          <div className="flex gap-4 justify-center flex-wrap animate-fade-up delay-300" style={{ opacity: 0 }}>
+          <div className="flex gap-3 sm:gap-4 justify-center flex-wrap animate-fade-up delay-300 px-2" style={{ opacity: 0 }}>
             <a
               href="#pricing"
-              className="px-8 py-4 rounded-xl bg-gradient-to-r from-accent to-accent2 text-white font-bold text-base shadow-[0_4px_24px_rgba(0,212,255,0.25)] hover:shadow-[0_8px_40px_rgba(0,212,255,0.35)] hover:-translate-y-0.5 transition-all"
+              className="px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl bg-gradient-to-r from-accent to-accent2 text-white font-bold text-sm sm:text-base shadow-[0_4px_24px_rgba(0,212,255,0.25)] hover:shadow-[0_8px_40px_rgba(0,212,255,0.35)] hover:-translate-y-0.5 transition-all"
             >
-              Start Free Trial
+              Get Started
             </a>
             <a
               href="#how"
-              className="px-8 py-4 rounded-xl border border-border bg-surface/50 text-foreground font-semibold text-base hover:border-accent/30 hover:-translate-y-0.5 transition-all"
+              className="px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl border border-border bg-surface/50 text-foreground font-semibold text-sm sm:text-base hover:border-accent/30 hover:-translate-y-0.5 transition-all"
             >
-              See How It Works
+              How It Works
             </a>
           </div>
         </div>
@@ -127,28 +161,28 @@ export default function Home() {
 
       {/* Stats marquee */}
       <div className="border-y border-border bg-accent/[0.02] overflow-hidden">
-        <div className="flex animate-[marquee_20s_linear_infinite]" style={{ width: "max-content" }}>
+        <div className="flex animate-[marquee_25s_linear_infinite]" style={{ width: "max-content" }}>
           {[...stats, ...stats, ...stats].map((s, i) => (
-            <div key={i} className="flex items-center gap-3 px-10 py-4">
-              <span className="text-accent font-mono font-bold text-lg">{s.value}</span>
-              <span className="text-muted text-sm">{s.label}</span>
-              <span className="text-border px-2">|</span>
+            <div key={i} className="flex items-center gap-2 sm:gap-3 px-5 sm:px-10 py-3 sm:py-4">
+              <span className="text-accent font-mono font-bold text-sm sm:text-lg">{s.value}</span>
+              <span className="text-muted text-xs sm:text-sm">{s.label}</span>
+              <span className="text-border px-1 sm:px-2">|</span>
             </div>
           ))}
         </div>
       </div>
 
       {/* How it works */}
-      <section id="how" className="py-24 px-6">
+      <section id="how" className="py-16 sm:py-24 px-4 sm:px-6">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-4">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-5xl font-black tracking-tight mb-3 sm:mb-4">
               Three steps to <span className="gradient-text">autonomous growth</span>
             </h2>
-            <p className="text-muted text-lg max-w-xl mx-auto">No code. No hiring. No managing freelancers. Just results.</p>
+            <p className="text-muted text-sm sm:text-lg max-w-xl mx-auto">No code. No hiring. No managing freelancers. Just results.</p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
             {[
               {
                 step: "01",
@@ -169,11 +203,11 @@ export default function Home() {
                 icon: "\u26A1",
               },
             ].map((item) => (
-              <div key={item.step} className="glass rounded-2xl p-8 transition-all hover:-translate-y-1">
-                <div className="text-4xl mb-5">{item.icon}</div>
-                <div className="text-xs font-mono text-accent font-bold tracking-widest mb-3">STEP {item.step}</div>
-                <h3 className="text-xl font-bold mb-3">{item.title}</h3>
-                <p className="text-muted text-sm leading-relaxed">{item.desc}</p>
+              <div key={item.step} className="glass rounded-2xl p-6 sm:p-8 transition-all hover:-translate-y-1">
+                <div className="text-3xl sm:text-4xl mb-4 sm:mb-5">{item.icon}</div>
+                <div className="text-[10px] sm:text-xs font-mono text-accent font-bold tracking-widest mb-2 sm:mb-3">STEP {item.step}</div>
+                <h3 className="text-lg sm:text-xl font-bold mb-2 sm:mb-3">{item.title}</h3>
+                <p className="text-muted text-xs sm:text-sm leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -181,18 +215,18 @@ export default function Home() {
       </section>
 
       {/* What the agent does */}
-      <section className="py-24 px-6 border-t border-border">
+      <section className="py-16 sm:py-24 px-4 sm:px-6 border-t border-border">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-4">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-5xl font-black tracking-tight mb-3 sm:mb-4">
               Not a bot. <span className="gradient-text">A sales agent.</span>
             </h2>
-            <p className="text-muted text-lg max-w-2xl mx-auto">
+            <p className="text-muted text-sm sm:text-lg max-w-2xl mx-auto px-2">
               Our agents don&apos;t spam. They read conversations, understand context, and contribute value before mentioning your product.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
             {[
               {
                 title: "Contextual Engagement",
@@ -225,9 +259,9 @@ export default function Home() {
                 color: "text-green",
               },
             ].map((f) => (
-              <div key={f.title} className="glass rounded-2xl p-7 transition-all hover:-translate-y-1">
-                <h3 className={`text-lg font-bold mb-2 ${f.color}`}>{f.title}</h3>
-                <p className="text-muted text-sm leading-relaxed">{f.desc}</p>
+              <div key={f.title} className="glass rounded-2xl p-5 sm:p-7 transition-all hover:-translate-y-1">
+                <h3 className={`text-base sm:text-lg font-bold mb-1.5 sm:mb-2 ${f.color}`}>{f.title}</h3>
+                <p className="text-muted text-xs sm:text-sm leading-relaxed">{f.desc}</p>
               </div>
             ))}
           </div>
@@ -235,22 +269,22 @@ export default function Home() {
       </section>
 
       {/* Platforms */}
-      <section id="platforms" className="py-24 px-6 border-t border-border">
+      <section id="platforms" className="py-16 sm:py-24 px-4 sm:px-6 border-t border-border">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-4">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-5xl font-black tracking-tight mb-3 sm:mb-4">
               Everywhere your <span className="gradient-text">customers are</span>
             </h2>
           </div>
 
           <div className="grid gap-3">
             {platforms.map((p) => (
-              <div key={p.name} className="glass rounded-xl px-6 py-5 flex items-center justify-between transition-all hover:-translate-y-0.5">
+              <div key={p.name} className="glass rounded-xl px-4 sm:px-6 py-4 sm:py-5 flex items-center justify-between transition-all hover:-translate-y-0.5">
                 <div>
-                  <div className="font-bold text-lg">{p.name}</div>
-                  <div className="text-muted text-sm">{p.desc}</div>
+                  <div className="font-bold text-base sm:text-lg">{p.name}</div>
+                  <div className="text-muted text-xs sm:text-sm">{p.desc}</div>
                 </div>
-                <div className={`text-xs font-mono font-bold px-3 py-1 rounded-full ${p.status === "Live" ? "bg-green/10 text-green border border-green/20" : "bg-accent/10 text-accent border border-accent/20"}`}>
+                <div className={`text-[10px] sm:text-xs font-mono font-bold px-2.5 sm:px-3 py-1 rounded-full shrink-0 ml-3 ${p.status === "Live" ? "bg-green/10 text-green border border-green/20" : "bg-accent/10 text-accent border border-accent/20"}`}>
                   {p.status}
                 </div>
               </div>
@@ -259,40 +293,40 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Comparison */}
-      <section className="py-24 px-6 border-t border-border">
+      {/* Comparison - scrollable on mobile */}
+      <section className="py-16 sm:py-24 px-4 sm:px-6 border-t border-border">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-4">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-5xl font-black tracking-tight mb-3 sm:mb-4">
               Why agents <span className="gradient-text">beat agencies</span>
             </h2>
           </div>
 
-          <div className="glass rounded-2xl overflow-hidden">
-            <table className="w-full text-sm">
+          <div className="glass rounded-2xl overflow-x-auto">
+            <table className="w-full text-xs sm:text-sm min-w-[500px]">
               <thead>
                 <tr className="border-b border-border">
-                  <th className="text-left p-5 text-muted font-semibold text-xs uppercase tracking-wider"></th>
-                  <th className="p-5 text-muted font-semibold text-xs uppercase tracking-wider">Marketing Agency</th>
-                  <th className="p-5 text-muted font-semibold text-xs uppercase tracking-wider">Freelancer</th>
-                  <th className="p-5 font-semibold text-xs uppercase tracking-wider text-accent">AgentOutreach</th>
+                  <th className="text-left p-3 sm:p-5 text-muted font-semibold text-[10px] sm:text-xs uppercase tracking-wider"></th>
+                  <th className="p-3 sm:p-5 text-muted font-semibold text-[10px] sm:text-xs uppercase tracking-wider">Agency</th>
+                  <th className="p-3 sm:p-5 text-muted font-semibold text-[10px] sm:text-xs uppercase tracking-wider">Freelancer</th>
+                  <th className="p-3 sm:p-5 font-semibold text-[10px] sm:text-xs uppercase tracking-wider text-accent">AgentOutreach</th>
                 </tr>
               </thead>
               <tbody>
                 {[
                   ["Monthly cost", "$5k-20k", "$2k-5k", "$199-999"],
-                  ["Hours/day", "8 (business hours)", "4-6", "24/7"],
+                  ["Hours/day", "8 hrs", "4-6 hrs", "24/7"],
                   ["Platforms", "1-2", "1", "5+"],
                   ["Setup time", "2-4 weeks", "1 week", "5 minutes"],
-                  ["Scales?", "Hire more people", "Burns out", "Instant"],
-                  ["Learns?", "Slowly", "Sometimes", "Every interaction"],
-                  ["Transparent?", "Monthly PDF", "Maybe", "Real-time dashboard"],
+                  ["Scales?", "Hire more", "Burns out", "Instant"],
+                  ["Learns?", "Slowly", "Sometimes", "Always"],
+                  ["Transparent?", "Monthly PDF", "Maybe", "Real-time"],
                 ].map(([label, agency, freelancer, us]) => (
                   <tr key={label} className="border-b border-border/50 hover:bg-surface/50 transition-colors">
-                    <td className="p-4 font-medium">{label}</td>
-                    <td className="p-4 text-center text-muted">{agency}</td>
-                    <td className="p-4 text-center text-muted">{freelancer}</td>
-                    <td className="p-4 text-center font-semibold text-green">{us}</td>
+                    <td className="p-3 sm:p-4 font-medium">{label}</td>
+                    <td className="p-3 sm:p-4 text-center text-muted">{agency}</td>
+                    <td className="p-3 sm:p-4 text-center text-muted">{freelancer}</td>
+                    <td className="p-3 sm:p-4 text-center font-semibold text-green">{us}</td>
                   </tr>
                 ))}
               </tbody>
@@ -302,71 +336,71 @@ export default function Home() {
       </section>
 
       {/* Solana / x402 section */}
-      <section className="py-24 px-6 border-t border-border">
+      <section className="py-16 sm:py-24 px-4 sm:px-6 border-t border-border">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-5xl font-black tracking-tight mb-3 sm:mb-4">
             Built on <span className="gradient-text">Solana + x402</span>
           </h2>
-          <p className="text-muted text-lg max-w-2xl mx-auto mb-12">
+          <p className="text-muted text-sm sm:text-lg max-w-2xl mx-auto mb-8 sm:mb-12 px-2">
             Native USDC payments on Solana via x402 protocol. No credit cards, no invoices. Agents pay agents.
           </p>
-          <div className="grid md:grid-cols-3 gap-6">
-            <div className="glass rounded-2xl p-7">
-              <div className="text-2xl mb-3">{"💰"}</div>
-              <h3 className="font-bold mb-2">Pay with USDC</h3>
-              <p className="text-muted text-sm">Subscribe and pay directly with USDC on Solana. No middlemen.</p>
+          <div className="grid sm:grid-cols-3 gap-4 sm:gap-6">
+            <div className="glass rounded-2xl p-5 sm:p-7">
+              <div className="text-2xl mb-2 sm:mb-3">{"💰"}</div>
+              <h3 className="font-bold mb-1.5 sm:mb-2 text-sm sm:text-base">Pay with USDC</h3>
+              <p className="text-muted text-xs sm:text-sm">Subscribe and pay directly with USDC on Solana. No middlemen.</p>
             </div>
-            <div className="glass rounded-2xl p-7">
-              <div className="text-2xl mb-3">{"🔗"}</div>
-              <h3 className="font-bold mb-2">On-Chain Receipts</h3>
-              <p className="text-muted text-sm">Every payment is verifiable on-chain. Full transparency.</p>
+            <div className="glass rounded-2xl p-5 sm:p-7">
+              <div className="text-2xl mb-2 sm:mb-3">{"🔗"}</div>
+              <h3 className="font-bold mb-1.5 sm:mb-2 text-sm sm:text-base">On-Chain Receipts</h3>
+              <p className="text-muted text-xs sm:text-sm">Every payment is verifiable on-chain. Full transparency.</p>
             </div>
-            <div className="glass rounded-2xl p-7">
-              <div className="text-2xl mb-3">{"🤖"}</div>
-              <h3 className="font-bold mb-2">Agent-to-Agent Ready</h3>
-              <p className="text-muted text-sm">Other agents can hire your outreach agents via x402 API. Composable growth.</p>
+            <div className="glass rounded-2xl p-5 sm:p-7">
+              <div className="text-2xl mb-2 sm:mb-3">{"🤖"}</div>
+              <h3 className="font-bold mb-1.5 sm:mb-2 text-sm sm:text-base">Agent-to-Agent</h3>
+              <p className="text-muted text-xs sm:text-sm">Other agents can hire your outreach agents via x402 API. Composable growth.</p>
             </div>
           </div>
         </div>
       </section>
 
       {/* Pricing */}
-      <section id="pricing" className="py-24 px-6 border-t border-border">
+      <section id="pricing" className="py-16 sm:py-24 px-4 sm:px-6 border-t border-border">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-4">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-5xl font-black tracking-tight mb-3 sm:mb-4">
               Simple, <span className="gradient-text">transparent pricing</span>
             </h2>
-            <p className="text-muted text-lg">7-day free trial. No credit card required. Cancel anytime.</p>
+            <p className="text-muted text-sm sm:text-lg">Pay with USDC on Solana. Cancel anytime.</p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
             {plans.map((plan) => (
               <div
                 key={plan.name}
-                className={`glass rounded-2xl p-8 relative transition-all hover:-translate-y-1 ${plan.popular ? "border-accent/30 shadow-[0_0_40px_rgba(0,212,255,0.08)]" : ""}`}
+                className={`glass rounded-2xl p-6 sm:p-8 relative transition-all hover:-translate-y-1 ${plan.popular ? "border-accent/30 shadow-[0_0_40px_rgba(0,212,255,0.08)]" : ""}`}
               >
                 {plan.popular && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-accent to-accent2 text-white text-xs font-bold">
+                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-gradient-to-r from-accent to-accent2 text-white text-[10px] sm:text-xs font-bold whitespace-nowrap">
                     Most Popular
                   </div>
                 )}
-                <div className="text-sm font-semibold text-muted mb-2">{plan.name}</div>
+                <div className="text-xs sm:text-sm font-semibold text-muted mb-2">{plan.name}</div>
                 <div className="flex items-baseline gap-1 mb-2">
-                  <span className="text-4xl font-black">{plan.price}</span>
-                  <span className="text-muted text-sm">{plan.period}</span>
+                  <span className="text-3xl sm:text-4xl font-black">{plan.price}</span>
+                  <span className="text-muted text-xs sm:text-sm">{plan.period}</span>
                 </div>
-                <div className="text-muted text-sm mb-6">{plan.description}</div>
-                <ul className="space-y-3 mb-8">
+                <div className="text-muted text-xs sm:text-sm mb-5 sm:mb-6">{plan.description}</div>
+                <ul className="space-y-2.5 sm:space-y-3 mb-6 sm:mb-8">
                   {plan.features.map((f) => (
-                    <li key={f} className="flex items-start gap-2 text-sm">
+                    <li key={f} className="flex items-start gap-2 text-xs sm:text-sm">
                       <span className="text-green mt-0.5">{"\u2713"}</span>
                       <span>{f}</span>
                     </li>
                   ))}
                 </ul>
                 <button
-                  className={`w-full py-3 rounded-xl font-bold text-sm transition-all hover:-translate-y-0.5 cursor-pointer ${
+                  className={`w-full py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm transition-all hover:-translate-y-0.5 cursor-pointer ${
                     plan.popular
                       ? "bg-gradient-to-r from-accent to-accent2 text-white shadow-[0_4px_20px_rgba(0,212,255,0.2)]"
                       : "bg-surface2 border border-border text-foreground hover:border-accent/30"
@@ -381,31 +415,31 @@ export default function Home() {
       </section>
 
       {/* CTA */}
-      <section className="py-24 px-6 border-t border-border">
+      <section className="py-16 sm:py-24 px-4 sm:px-6 border-t border-border">
         <div className="max-w-3xl mx-auto text-center">
-          <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-4">
+          <h2 className="text-2xl sm:text-3xl md:text-5xl font-black tracking-tight mb-3 sm:mb-4">
             Ready to grow on <span className="gradient-text">autopilot?</span>
           </h2>
-          <p className="text-muted text-lg mb-8 max-w-xl mx-auto">
-            Join Solana projects already using AI agents to find customers. Set up in 5 minutes. First 7 days free.
+          <p className="text-muted text-sm sm:text-lg mb-6 sm:mb-8 max-w-xl mx-auto px-2">
+            Join Solana projects using AI agents to find and convert customers. Set up in 5 minutes.
           </p>
           <a
             href="#pricing"
-            className="inline-flex items-center gap-2 px-10 py-4 rounded-xl bg-gradient-to-r from-accent to-accent2 text-white font-bold text-lg shadow-[0_4px_24px_rgba(0,212,255,0.25)] hover:shadow-[0_8px_40px_rgba(0,212,255,0.35)] hover:-translate-y-0.5 transition-all"
+            className="inline-flex items-center gap-2 px-8 sm:px-10 py-3.5 sm:py-4 rounded-xl bg-gradient-to-r from-accent to-accent2 text-white font-bold text-base sm:text-lg shadow-[0_4px_24px_rgba(0,212,255,0.25)] hover:shadow-[0_8px_40px_rgba(0,212,255,0.35)] hover:-translate-y-0.5 transition-all"
           >
-            Start Free Trial
+            Get Started
           </a>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border py-12 px-6">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+      <footer className="border-t border-border py-8 sm:py-12 px-4 sm:px-6">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="text-sm font-bold">
             Agent<span className="gradient-text">Outreach</span>
             <span className="text-muted font-normal ml-2">by PalmVox</span>
           </div>
-          <div className="flex gap-6 text-sm text-muted">
+          <div className="flex flex-wrap justify-center gap-4 sm:gap-6 text-xs sm:text-sm text-muted">
             <a href="#" className="hover:text-foreground transition-colors">Docs</a>
             <a href="#" className="hover:text-foreground transition-colors">API</a>
             <a href="https://alpha.palmvox.com" className="hover:text-foreground transition-colors">AgentAlpha</a>
