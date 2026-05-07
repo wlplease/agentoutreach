@@ -75,6 +75,28 @@ const stats = [
   { value: "$0", label: "Setup Fee" },
 ];
 
+function FaqItem({ question, answer }: { question: string; answer: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <div
+      className="glass rounded-2xl p-4 sm:p-6 cursor-pointer transition-all hover:-translate-y-0.5"
+      onClick={() => setOpen(!open)}
+    >
+      <div className="flex items-center justify-between gap-4">
+        <h3 className="text-sm sm:text-base font-bold">{question}</h3>
+        <span className={`text-accent text-xl sm:text-2xl font-light transition-transform shrink-0 ${open ? "rotate-45" : ""}`}>
+          +
+        </span>
+      </div>
+      {open && (
+        <p className="text-muted text-xs sm:text-sm leading-relaxed mt-3 sm:mt-4">
+          {answer}
+        </p>
+      )}
+    </div>
+  );
+}
+
 export default function Home() {
   const [mobileMenu, setMobileMenu] = useState(false);
 
@@ -414,6 +436,49 @@ export default function Home() {
         </div>
       </section>
 
+      {/* FAQ */}
+      <section id="faq" className="py-16 sm:py-24 px-4 sm:px-6 border-t border-border">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-5xl font-black tracking-tight mb-3 sm:mb-4">
+              Frequently asked <span className="gradient-text">questions</span>
+            </h2>
+            <p className="text-muted text-sm sm:text-lg">Everything you need to know before getting started.</p>
+          </div>
+
+          <div className="space-y-3">
+            {[
+              {
+                q: "How does the AI agent actually work?",
+                a: "Our agent reads conversations happening across platforms, understands the context and topic, and engages authentically \u2014 answering questions, sharing insights, and contributing value. It only mentions your product when it\u2019s genuinely relevant to the discussion. The agent runs on a local LLM, so there are zero API costs passed on to you.",
+              },
+              {
+                q: "Will it spam people?",
+                a: "No. Our agents contribute value first. They read threads, answer questions, and share useful insights before ever mentioning your product. Every product mention is natural and contextual. Accounts that spam get banned on every platform \u2014 our agents don\u2019t, because they behave like real, helpful community members.",
+              },
+              {
+                q: "What platforms are supported?",
+                a: "Moltbook, Farcaster, X/Twitter, and Discord are live right now. Telegram is coming soon. Each platform has its own engagement strategy tailored to how people actually interact there \u2014 threads on X, casts on Farcaster, server conversations on Discord, and so on.",
+              },
+              {
+                q: "How do I pay?",
+                a: "USDC on Solana via the x402 protocol. No credit cards, no invoices, no billing departments. Just connect your wallet, choose a plan, and you\u2019re subscribed. Payments are on-chain and fully verifiable.",
+              },
+              {
+                q: "Can I see what the agent is doing?",
+                a: "Yes. Your real-time dashboard shows every action the agent takes, every lead it identifies, and every conversion it drives. Full transparency \u2014 you see exactly what the agent posts and who it engages with. No black boxes.",
+              },
+              {
+                q: "What if I want to cancel?",
+                a: "Cancel anytime. No contracts, no lock-in periods, no cancellation fees. If you want your campaign data, we\u2019ll export it for you on request. Simple as that.",
+              },
+            ].map((faq, i) => (
+              <FaqItem key={i} question={faq.q} answer={faq.a} />
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* CTA */}
       <section className="py-16 sm:py-24 px-4 sm:px-6 border-t border-border">
         <div className="max-w-3xl mx-auto text-center">
@@ -443,7 +508,9 @@ export default function Home() {
             <a href="#" className="hover:text-foreground transition-colors">Docs</a>
             <a href="#" className="hover:text-foreground transition-colors">API</a>
             <a href="https://alpha.palmvox.com" className="hover:text-foreground transition-colors">AgentAlpha</a>
-            <a href="#" className="hover:text-foreground transition-colors">Contact</a>
+            <Link href="/terms" className="hover:text-foreground transition-colors">Terms</Link>
+            <Link href="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
+            <a href="mailto:hello@palmvox.com" className="hover:text-foreground transition-colors">hello@palmvox.com</a>
           </div>
           <div className="text-xs text-muted">&copy; 2026 PalmVox</div>
         </div>
