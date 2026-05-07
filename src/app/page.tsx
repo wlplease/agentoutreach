@@ -165,12 +165,12 @@ export default function Home() {
             Replace your $10k/mo marketing spend. Pay with USDC on Solana.
           </p>
           <div className="flex gap-3 sm:gap-4 justify-center flex-wrap animate-fade-up delay-300 px-2" style={{ opacity: 0 }}>
-            <a
-              href="#pricing"
+            <Link
+              href="/onboarding"
               className="px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl bg-gradient-to-r from-accent to-accent2 text-white font-bold text-sm sm:text-base shadow-[0_4px_24px_rgba(0,212,255,0.25)] hover:shadow-[0_8px_40px_rgba(0,212,255,0.35)] hover:-translate-y-0.5 transition-all"
             >
               Get Started
-            </a>
+            </Link>
             <a
               href="#how"
               className="px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl border border-border bg-surface/50 text-foreground font-semibold text-sm sm:text-base hover:border-accent/30 hover:-translate-y-0.5 transition-all"
@@ -421,15 +421,16 @@ export default function Home() {
                     </li>
                   ))}
                 </ul>
-                <button
-                  className={`w-full py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm transition-all hover:-translate-y-0.5 cursor-pointer ${
+                <Link
+                  href="/onboarding"
+                  className={`block w-full py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm transition-all hover:-translate-y-0.5 text-center ${
                     plan.popular
                       ? "bg-gradient-to-r from-accent to-accent2 text-white shadow-[0_4px_20px_rgba(0,212,255,0.2)]"
                       : "bg-surface2 border border-border text-foreground hover:border-accent/30"
                   }`}
                 >
                   {plan.cta}
-                </button>
+                </Link>
               </div>
             ))}
           </div>
@@ -488,12 +489,12 @@ export default function Home() {
           <p className="text-muted text-sm sm:text-lg mb-6 sm:mb-8 max-w-xl mx-auto px-2">
             Join Solana projects using AI agents to find and convert customers. Set up in 5 minutes.
           </p>
-          <a
-            href="#pricing"
+          <Link
+            href="/onboarding"
             className="inline-flex items-center gap-2 px-8 sm:px-10 py-3.5 sm:py-4 rounded-xl bg-gradient-to-r from-accent to-accent2 text-white font-bold text-base sm:text-lg shadow-[0_4px_24px_rgba(0,212,255,0.25)] hover:shadow-[0_8px_40px_rgba(0,212,255,0.35)] hover:-translate-y-0.5 transition-all"
           >
             Get Started
-          </a>
+          </Link>
         </div>
       </section>
 
