@@ -1,9 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
+import HCaptcha from "@hcaptcha/react-hcaptcha";
+
+const HCAPTCHA_SITE_KEY = "b396d9cc-9e0e-4954-8daa-1c14c1aa155e";
 
 export default function LoginPage() {
   const [mode, setMode] = useState<"signin" | "signup">("signin");
@@ -12,30 +15,39 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const captchaRef = useRef<HCaptcha>(null);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setSuccess("");
-    setLoading(true);
 
+    if (!captchaToken) {
+      setError("Please complete the CAPTCHA");
+      return;
+    }
+
+    setLoading(true);
     const supabase = createClient();
 
     if (mode === "signup") {
-      // Use our admin API to create user with auto-confirmed email
       try {
         const res = await fetch("/api/auth/signup", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password }),
+          body: JSON.stringify({ email, password, captchaToken }),
         });
         const data = await res.json();
         if (!res.ok) {
           setError(data.error || "Signup failed");
         } else {
-          // Auto sign in after signup
-          const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+          const { error: signInError } = await supabase.auth.signInWithPassword({
+            email,
+            password,
+            options: { captchaToken },
+          });
           if (signInError) {
             setSuccess("Account created! You can now sign in.");
             setMode("signin");
@@ -48,7 +60,11 @@ export default function LoginPage() {
         setError("Something went wrong. Please try again.");
       }
     } else {
-      const { error } = await supabase.auth.signInWithPassword({ email, password });
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+        options: { captchaToken },
+      });
       if (error) {
         setError(error.message);
       } else {
@@ -56,6 +72,9 @@ export default function LoginPage() {
       }
     }
 
+    // Reset captcha after attempt
+    setCaptchaToken(null);
+    captchaRef.current?.resetCaptcha();
     setLoading(false);
   };
 
@@ -115,6 +134,17 @@ export default function LoginPage() {
                 />
               </div>
 
+              {/* hCaptcha */}
+              <div className="flex justify-center">
+                <HCaptcha
+                  sitekey={HCAPTCHA_SITE_KEY}
+                  onVerify={(token) => setCaptchaToken(token)}
+                  onExpire={() => setCaptchaToken(null)}
+                  ref={captchaRef}
+                  theme="dark"
+                />
+              </div>
+
               {error && (
                 <div className="px-4 py-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
                   {error}
@@ -129,8 +159,8 @@ export default function LoginPage() {
 
               <button
                 type="submit"
-                disabled={loading}
-                className="w-full py-3 rounded-xl bg-gradient-to-r from-accent to-accent2 text-white font-bold text-sm shadow-[0_4px_20px_rgba(0,212,255,0.2)] hover:shadow-[0_8px_40px_rgba(0,212,255,0.35)] hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:hover:translate-y-0"
+                disabled={loading || !captchaToken}
+                className="w-full py-3 rounded-xl bg-gradient-to-r from-accent to-accent2 text-white font-bold text-sm shadow-[0_4px_20px_rgba(0,212,255,0.2)] hover:shadow-[0_8px_40px_rgba(0,212,255,0.35)] hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
               >
                 {loading
                   ? "Loading..."
@@ -145,8 +175,8 @@ export default function LoginPage() {
                 <p className="text-sm text-muted">
                   Don&apos;t have an account?{" "}
                   <button
-                    onClick={() => { setMode("signup"); setError(""); setSuccess(""); }}
-                    className="text-accent font-semibold hover:underline"
+                    onClick={() => { setMode("signup"); setError(""); setSuccess(""); setCaptchaToken(null); captchaRef.current?.resetCaptcha(); }}
+                    className="text-accent font-semibold hover:underline cursor-pointer"
                   >
                     Sign up
                   </button>
@@ -155,8 +185,8 @@ export default function LoginPage() {
                 <p className="text-sm text-muted">
                   Already have an account?{" "}
                   <button
-                    onClick={() => { setMode("signin"); setError(""); setSuccess(""); }}
-                    className="text-accent font-semibold hover:underline"
+                    onClick={() => { setMode("signin"); setError(""); setSuccess(""); setCaptchaToken(null); captchaRef.current?.resetCaptcha(); }}
+                    className="text-accent font-semibold hover:underline cursor-pointer"
                   >
                     Sign in
                   </button>
