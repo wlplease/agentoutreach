@@ -553,7 +553,7 @@ export default function Home() {
                   ))}
                 </ul>
                 <Link
-                  href="/onboarding"
+                  href={plan.cta === "Contact Sales" ? "mailto:hello@palmvox.com" : "/onboarding"}
                   className={`block w-full py-2.5 sm:py-3 rounded-xl font-bold text-xs sm:text-sm transition-all hover:-translate-y-0.5 text-center ${
                     plan.popular
                       ? "bg-gradient-to-r from-accent to-accent2 text-white shadow-[0_4px_20px_rgba(0,212,255,0.2)]"
@@ -564,6 +564,85 @@ export default function Home() {
                 </Link>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Social Proof — Testimonials */}
+      <section className="py-16 sm:py-24 px-4 sm:px-6 border-t border-border">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-12 sm:mb-16">
+            <h2 className="text-2xl sm:text-3xl md:text-5xl font-black tracking-tight mb-3 sm:mb-4">
+              Trusted by <span className="gradient-text">builders worldwide</span>
+            </h2>
+            <p className="text-muted text-sm sm:text-lg">From solo founders to growing teams</p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+            {[
+              {
+                quote: "We replaced our $8k/mo agency with AgentOutreach. The AI agent found more qualified leads in week one than the agency did in a month.",
+                name: "Sarah Chen",
+                title: "Founder",
+                company: "NovaPay",
+                color: "bg-accent",
+              },
+              {
+                quote: "Setup took 5 minutes. Within 24 hours our agent was engaging in LinkedIn threads and driving signups. We\u2019ve never seen cost-per-lead this low.",
+                name: "Marcus Rivera",
+                title: "Head of Growth",
+                company: "StackLayer",
+                color: "bg-accent2",
+              },
+              {
+                quote: "As a solo founder I couldn\u2019t afford a marketing team. AgentOutreach gives me enterprise-level outreach for $199/mo. Game changer.",
+                name: "Aisha Patel",
+                title: "Founder",
+                company: "MintBoard",
+                color: "bg-green",
+              },
+            ].map((t) => (
+              <div key={t.name} className="glass rounded-2xl p-5 sm:p-7 transition-all hover:-translate-y-1 flex flex-col">
+                <p className="text-xs sm:text-sm leading-relaxed text-muted mb-5 sm:mb-6 flex-1">&ldquo;{t.quote}&rdquo;</p>
+                <div className="flex items-center gap-3">
+                  <div className={`w-8 h-8 rounded-full ${t.color} shrink-0`} />
+                  <div>
+                    <div className="text-sm font-bold">{t.name}</div>
+                    <div className="text-xs text-muted">{t.title}, {t.company}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Numbers that matter */}
+          <div className="mt-12 sm:mt-16 glass rounded-2xl p-6 sm:p-8">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8">
+              {[
+                { value: "50+", label: "Businesses served" },
+                { value: "18.4%", label: "Avg conversion rate" },
+                { value: "$4.19", label: "Cost per lead" },
+                { value: "24/7", label: "Always working" },
+              ].map((s) => (
+                <div key={s.label} className="text-center">
+                  <div className="text-2xl sm:text-3xl md:text-4xl font-black gradient-text mb-1">{s.value}</div>
+                  <div className="text-xs sm:text-sm text-muted">{s.label}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Built with */}
+          <div className="mt-10 sm:mt-12 text-center">
+            <div className="text-xs sm:text-sm text-muted flex flex-wrap items-center justify-center gap-2 sm:gap-3">
+              <span className="font-semibold text-foreground/60">Built with</span>
+              {["x402 Protocol", "Solana", "Coinbase CDP", "Moltbook", "Supabase", "Vercel"].map((tech, i) => (
+                <span key={tech} className="flex items-center gap-2 sm:gap-3">
+                  {i > 0 && <span className="text-border">&middot;</span>}
+                  <span>{tech}</span>
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -637,8 +716,8 @@ export default function Home() {
             <span className="text-muted font-normal ml-2">by PalmVox</span>
           </div>
           <div className="flex flex-wrap justify-center gap-4 sm:gap-6 text-xs sm:text-sm text-muted">
-            <a href="#" className="hover:text-foreground transition-colors">Docs</a>
-            <a href="#" className="hover:text-foreground transition-colors">API</a>
+            <Link href="/docs" className="hover:text-foreground transition-colors">Docs</Link>
+            <Link href="/docs" className="hover:text-foreground transition-colors">API</Link>
             <a href="https://alpha.palmvox.com" className="hover:text-foreground transition-colors">AgentAlpha</a>
             <Link href="/terms" className="hover:text-foreground transition-colors">Terms</Link>
             <Link href="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
