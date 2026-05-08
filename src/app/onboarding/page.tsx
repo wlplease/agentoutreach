@@ -101,8 +101,16 @@ export default function OnboardingPage() {
     setError(null);
 
     try {
-      const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
+      let user;
+      try {
+        const supabase = createClient();
+        const { data } = await supabase.auth.getUser();
+        user = data.user;
+      } catch {
+        setError("Unable to connect. Please try again later.");
+        setLaunching(false);
+        return;
+      }
 
       if (!user) {
         router.push("/login");

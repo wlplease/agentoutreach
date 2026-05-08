@@ -83,6 +83,9 @@ body {
   box-shadow: 0 0 40px rgba(0,212,255,0.04);
 }
 
+.hide-scrollbar::-webkit-scrollbar { display: none; }
+.hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
 .mesh-bg {
   background:
     radial-gradient(ellipse 800px 800px at 20% 20%, rgba(0,212,255,0.06), transparent),

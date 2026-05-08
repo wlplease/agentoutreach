@@ -132,6 +132,13 @@ export default function LoginPage() {
                   minLength={6}
                   className="w-full px-4 py-3 rounded-xl bg-surface border border-border text-foreground placeholder:text-muted/50 text-sm focus:outline-none focus:border-accent/50 focus:ring-1 focus:ring-accent/20 transition-colors"
                 />
+                {mode === "signin" && (
+                  <div className="mt-1.5 text-right">
+                    <Link href="/reset-password" className="text-xs text-muted hover:text-accent transition-colors">
+                      Forgot password?
+                    </Link>
+                  </div>
+                )}
               </div>
 
               {/* hCaptcha */}

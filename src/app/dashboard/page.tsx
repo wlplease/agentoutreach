@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState, useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
+import { CardSkeleton, Skeleton } from "@/components/Skeleton";
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
@@ -92,25 +93,26 @@ export default function Dashboard() {
   const [leadsLoading, setLeadsLoading] = useState(false);
   const [activityLoading, setActivityLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [togglingStatus, setTogglingStatus] = useState<string | null>(null);
 
   // Load campaigns on mount
   useEffect(() => {
     async function loadCampaigns() {
-      const supabase = createClient();
-      const { data: { user } } = await supabase.auth.getUser();
-
-      if (!user) {
-        router.push("/login");
-        return;
-      }
-
       try {
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+
+        if (!user) {
+          router.push("/login");
+          return;
+        }
+
         const res = await fetch(`/api/campaigns?user_id=${user.id}`);
         if (!res.ok) throw new Error("Failed to load campaigns");
         const data = await res.json();
         setCampaigns(data.campaigns || []);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Failed to load data");
+        setError(err instanceof Error ? err.message : "Unable to connect. Please try again later.");
       } finally {
         setLoading(false);
       }
@@ -184,13 +186,26 @@ export default function Dashboard() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background mesh-bg flex items-center justify-center">
-        <div className="flex flex-col items-center gap-4">
-          <svg className="animate-spin h-8 w-8 text-accent" viewBox="0 0 24 24" fill="none">
-            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-            <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-          </svg>
-          <span className="text-muted text-sm font-mono">Loading dashboard...</span>
+      <div className="min-h-screen bg-background mesh-bg">
+        <nav className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+            <Link href="/" className="text-base sm:text-lg font-black tracking-tight">
+              Agent<span className="gradient-text">Outreach</span>
+            </Link>
+            <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-r from-accent to-accent2" />
+          </div>
+        </nav>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-6 sm:py-8">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 mb-6 sm:mb-8">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <CardSkeleton key={i} />
+            ))}
+          </div>
+          <Skeleton className="h-10 w-full mb-6" />
+          <div className="grid lg:grid-cols-5 gap-6">
+            <Skeleton className="h-64 lg:col-span-3" />
+            <Skeleton className="h-64 lg:col-span-2" />
+          </div>
         </div>
       </div>
     );
@@ -231,6 +246,16 @@ export default function Dashboard() {
               </div>
             )}
             <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gradient-to-r from-accent to-accent2 flex items-center justify-center text-white text-[10px] sm:text-xs font-bold">U</div>
+            <button
+              onClick={async () => {
+                const supabase = createClient();
+                await supabase.auth.signOut();
+                router.push("/login");
+              }}
+              className="px-3 py-1.5 rounded-lg border border-border text-xs font-medium text-muted hover:text-red-400 hover:border-red-400/30 transition-all cursor-pointer"
+            >
+              Sign Out
+            </button>
           </div>
         </div>
       </nav>
@@ -259,7 +284,7 @@ export default function Dashboard() {
           </div>
 
           {/* Tabs */}
-          <div className="flex gap-0 border-b border-border mb-5 sm:mb-6 overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0">
+          <div className="flex gap-0 border-b border-border mb-5 sm:mb-6 overflow-x-auto -mx-4 px-4 sm:mx-0 sm:px-0 hide-scrollbar">
             {tabs.map((t) => (
               <button
                 key={t}
@@ -475,8 +500,32 @@ export default function Dashboard() {
                     <div className="text-sm text-muted">{(c.platforms || []).join(", ")} &middot; Last updated: {c.updated_at ? timeAgo(c.updated_at) : "—"}</div>
                   </div>
                   <div className="flex gap-2">
-                    <button className="px-4 py-2 rounded-lg border border-border text-sm font-medium text-muted hover:text-foreground hover:border-accent/30 transition-all cursor-pointer">
-                      {c.status === "active" ? "Pause" : "Resume"}
+                    <button
+                      disabled={togglingStatus === c.id}
+                      onClick={async () => {
+                        setTogglingStatus(c.id);
+                        try {
+                          const newStatus = c.status === "active" ? "paused" : "active";
+                          const res = await fetch(`/api/campaigns/${c.id}`, {
+                            method: "PATCH",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ status: newStatus }),
+                          });
+                          if (!res.ok) throw new Error("Failed to update campaign");
+                          setCampaigns((prev) =>
+                            prev.map((camp) =>
+                              camp.id === c.id ? { ...camp, status: newStatus } : camp
+                            )
+                          );
+                        } catch {
+                          // silently fail
+                        } finally {
+                          setTogglingStatus(null);
+                        }
+                      }}
+                      className="px-4 py-2 rounded-lg border border-border text-sm font-medium text-muted hover:text-foreground hover:border-accent/30 transition-all cursor-pointer disabled:opacity-50"
+                    >
+                      {togglingStatus === c.id ? "Updating..." : c.status === "active" ? "Pause" : "Resume"}
                     </button>
                     <button className="px-4 py-2 rounded-lg bg-gradient-to-r from-accent to-accent2 text-white text-sm font-bold cursor-pointer">
                       Edit
