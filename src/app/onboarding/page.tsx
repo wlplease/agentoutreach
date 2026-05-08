@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { createClient } from "@/utils/supabase/client";
 
 const stepLabels = ["Your Product", "Ideal Customer", "Platforms & Style", "Launch"];
 
@@ -63,6 +64,7 @@ export default function OnboardingPage() {
   const [step, setStep] = useState(0);
   const [form, setForm] = useState<FormData>(initialFormData);
   const [launching, setLaunching] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const update = (field: keyof FormData, value: string | string[]) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -94,17 +96,52 @@ export default function OnboardingPage() {
 
   const handleLaunch = async () => {
     setLaunching(true);
+    setError(null);
+
     try {
-      await fetch("/api/campaigns", {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (!user) {
+        router.push("/login");
+        return;
+      }
+
+      const res = await fetch("/api/campaigns", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          ...form,
-          campaignName: campaignName,
+          user_id: user.id,
+          name: campaignName,
+          product_url: form.productUrl,
+          product_description: form.productDescription,
+          icp_persona: form.persona,
+          icp_chains: form.chains,
+          icp_interests: form.interests,
+          icp_keywords: form.keywords,
+          platforms: form.platforms,
+          agent_personality: form.personality,
+          cta_url: form.ctaUrl,
         }),
       });
+
+      if (!res.ok) {
+        const data = await res.json();
+        throw new Error(data.error || "Failed to create campaign");
+      }
+
+      const { campaign } = await res.json();
+
+      // Trigger the first agent run (Moltbook post)
+      await fetch("/api/agent/run", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ campaign_id: campaign.id }),
+      });
+
       router.push("/dashboard");
-    } catch {
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong");
       setLaunching(false);
     }
   };
@@ -408,7 +445,7 @@ export default function OnboardingPage() {
                   <div className="flex items-center justify-between">
                     <span className="text-xs sm:text-sm text-muted">Product</span>
                     <span className="text-sm sm:text-base font-semibold">
-                      {form.productName || "—"}
+                      {form.productName || "\u2014"}
                     </span>
                   </div>
                   <div className="h-px bg-border" />
@@ -422,7 +459,7 @@ export default function OnboardingPage() {
                                 platformOptions.find((p) => p.id === id)?.name
                             )
                             .join(", ")
-                        : "—"}
+                        : "\u2014"}
                     </span>
                   </div>
                   <div className="h-px bg-border" />
@@ -431,14 +468,14 @@ export default function OnboardingPage() {
                     <span className="text-sm sm:text-base font-semibold">
                       {form.personality.length > 0
                         ? form.personality.join(", ")
-                        : "—"}
+                        : "\u2014"}
                     </span>
                   </div>
                   <div className="h-px bg-border" />
                   <div className="flex items-center justify-between">
                     <span className="text-xs sm:text-sm text-muted">Target</span>
                     <span className="text-sm sm:text-base font-semibold">
-                      {form.persona || "—"}
+                      {form.persona || "\u2014"}
                     </span>
                   </div>
                 </div>
@@ -456,13 +493,26 @@ export default function OnboardingPage() {
                 />
               </div>
 
+              {/* Error message */}
+              {error && (
+                <div className="bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3 text-sm text-red-400">
+                  {error}
+                </div>
+              )}
+
               {/* Launch Button */}
               <button
                 type="button"
                 onClick={handleLaunch}
                 disabled={launching}
-                className="w-full py-3.5 sm:py-4 rounded-xl bg-gradient-to-r from-accent to-accent2 text-white font-bold text-base sm:text-lg shadow-[0_4px_24px_rgba(0,212,255,0.25)] hover:shadow-[0_8px_40px_rgba(0,212,255,0.35)] hover:-translate-y-0.5 transition-all disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+                className="w-full py-3.5 sm:py-4 rounded-xl bg-gradient-to-r from-accent to-accent2 text-white font-bold text-base sm:text-lg shadow-[0_4px_24px_rgba(0,212,255,0.25)] hover:shadow-[0_8px_40px_rgba(0,212,255,0.35)] hover:-translate-y-0.5 transition-all disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer flex items-center justify-center gap-2"
               >
+                {launching && (
+                  <svg className="animate-spin h-5 w-5" viewBox="0 0 24 24" fill="none">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                )}
                 {launching ? "Launching..." : "Launch Agent"}
               </button>
 

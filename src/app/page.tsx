@@ -99,6 +99,38 @@ function FaqItem({ question, answer }: { question: string; answer: string }) {
 
 export default function Home() {
   const [mobileMenu, setMobileMenu] = useState(false);
+  const [demoUrl, setDemoUrl] = useState("");
+  const [demoDesc, setDemoDesc] = useState("");
+  const [demoLoading, setDemoLoading] = useState(false);
+  const [demoPosts, setDemoPosts] = useState<
+    { title: string; content: string; submolt: string; angle: string }[] | null
+  >(null);
+  const [demoProductName, setDemoProductName] = useState("");
+
+  const handleDemo = async () => {
+    if (!demoUrl.trim()) return;
+    setDemoLoading(true);
+    setDemoPosts(null);
+    try {
+      const res = await fetch("/api/demo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          product_url: demoUrl,
+          product_description: demoDesc || undefined,
+        }),
+      });
+      const data = await res.json();
+      if (data.posts) {
+        setDemoPosts(data.posts);
+        setDemoProductName(data.product_name);
+      }
+    } catch {
+      // silently fail
+    } finally {
+      setDemoLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen mesh-bg">
@@ -233,6 +265,103 @@ export default function Home() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Try It Now Demo */}
+      <section id="demo" className="py-16 sm:py-24 px-4 sm:px-6 border-t border-border">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-10 sm:mb-14">
+            <h2 className="text-2xl sm:text-3xl md:text-5xl font-black tracking-tight mb-3 sm:mb-4">
+              <span className="gradient-text">See it in action</span>
+            </h2>
+            <p className="text-muted text-sm sm:text-lg max-w-xl mx-auto">
+              Enter your product URL and see what your AI agent would post
+            </p>
+          </div>
+
+          <div className="glass rounded-2xl p-5 sm:p-8 mb-8">
+            <div className="space-y-4">
+              <div>
+                <input
+                  type="text"
+                  value={demoUrl}
+                  onChange={(e) => setDemoUrl(e.target.value)}
+                  placeholder="https://your-solana-project.com"
+                  className="w-full px-4 py-3 rounded-xl bg-surface2 border border-border text-foreground placeholder:text-muted/50 text-sm sm:text-base focus:outline-none focus:border-accent/50 transition-colors"
+                />
+              </div>
+              <div>
+                <textarea
+                  value={demoDesc}
+                  onChange={(e) => setDemoDesc(e.target.value)}
+                  placeholder="Describe your product in a sentence..."
+                  rows={2}
+                  className="w-full px-4 py-3 rounded-xl bg-surface2 border border-border text-foreground placeholder:text-muted/50 text-sm sm:text-base focus:outline-none focus:border-accent/50 transition-colors resize-none"
+                />
+              </div>
+              <button
+                onClick={handleDemo}
+                disabled={demoLoading || !demoUrl.trim()}
+                className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-gradient-to-r from-accent to-accent2 text-white font-bold text-sm sm:text-base shadow-[0_4px_24px_rgba(0,212,255,0.25)] hover:shadow-[0_8px_40px_rgba(0,212,255,0.35)] hover:-translate-y-0.5 transition-all disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 disabled:hover:shadow-[0_4px_24px_rgba(0,212,255,0.25)]"
+              >
+                {demoLoading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    Generating...
+                  </span>
+                ) : (
+                  "Generate Sample Posts"
+                )}
+              </button>
+            </div>
+          </div>
+
+          {demoPosts && (
+            <div className="space-y-6 animate-fade-up">
+              <div className="text-center mb-2">
+                <p className="text-sm text-muted">
+                  Sample posts for <span className="text-foreground font-semibold">{demoProductName}</span>
+                </p>
+              </div>
+              <div className="grid gap-4 sm:gap-6">
+                {demoPosts.map((post, i) => {
+                  const badgeColor =
+                    post.angle === "Insight"
+                      ? "bg-accent/10 text-accent border-accent/20"
+                      : post.angle === "Question"
+                      ? "bg-accent2/10 text-accent2 border-accent2/20"
+                      : "bg-green/10 text-green border-green/20";
+                  return (
+                    <div key={i} className="glass rounded-2xl p-5 sm:p-7 transition-all hover:-translate-y-0.5">
+                      <div className="flex items-center gap-3 mb-3">
+                        <span className={`text-[10px] sm:text-xs font-mono font-bold px-2.5 py-1 rounded-full border ${badgeColor}`}>
+                          {post.angle}
+                        </span>
+                        <span className="text-[10px] sm:text-xs font-mono text-muted bg-surface2 px-2.5 py-1 rounded-full">
+                          {post.submolt}
+                        </span>
+                      </div>
+                      <h3 className="text-sm sm:text-base font-bold mb-2">{post.title}</h3>
+                      <p className="text-muted text-xs sm:text-sm leading-relaxed whitespace-pre-line">{post.content}</p>
+                    </div>
+                  );
+                })}
+              </div>
+              <div className="text-center pt-4">
+                <p className="text-muted text-sm mb-4">Like what you see?</p>
+                <Link
+                  href="/onboarding"
+                  className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl bg-gradient-to-r from-accent to-accent2 text-white font-bold text-sm sm:text-base shadow-[0_4px_24px_rgba(0,212,255,0.25)] hover:shadow-[0_8px_40px_rgba(0,212,255,0.35)] hover:-translate-y-0.5 transition-all"
+                >
+                  Get Started
+                </Link>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 
