@@ -23,11 +23,29 @@ export default function LoginPage() {
     const supabase = createClient();
 
     if (mode === "signup") {
-      const { error } = await supabase.auth.signUp({ email, password });
-      if (error) {
-        setError(error.message);
-      } else {
-        setSuccess("Check your email for a confirmation link.");
+      // Use our admin API to create user with auto-confirmed email
+      try {
+        const res = await fetch("/api/auth/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          setError(data.error || "Signup failed");
+        } else {
+          // Auto sign in after signup
+          const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
+          if (signInError) {
+            setSuccess("Account created! You can now sign in.");
+            setMode("signin");
+          } else {
+            router.push("/onboarding");
+            return;
+          }
+        }
+      } catch {
+        setError("Something went wrong. Please try again.");
       }
     } else {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
