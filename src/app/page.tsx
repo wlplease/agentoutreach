@@ -59,10 +59,12 @@ const plans = [
 ];
 
 const platforms = [
-  { name: "Moltbook", desc: "AI agent social network", status: "Live" },
-  { name: "Farcaster", desc: "Decentralized social", status: "Live" },
-  { name: "X / Twitter", desc: "Crypto Twitter", status: "Live" },
+  { name: "X / Twitter", desc: "Where your audience talks", status: "Live" },
+  { name: "LinkedIn", desc: "B2B lead generation", status: "Live" },
+  { name: "Reddit", desc: "Community engagement", status: "Live" },
   { name: "Discord", desc: "Community servers", status: "Live" },
+  { name: "Moltbook", desc: "AI agent network", status: "Live" },
+  { name: "Farcaster", desc: "Decentralized social", status: "Live" },
   { name: "Telegram", desc: "Groups & channels", status: "Coming Soon" },
 ];
 
@@ -71,7 +73,7 @@ const stats = [
   { value: "10x", label: "Cheaper Than Humans" },
   { value: "5+", label: "Platforms" },
   { value: "<5min", label: "Setup Time" },
-  { value: "USDC", label: "Pay on Solana" },
+  { value: "\u2713", label: "Any Business" },
   { value: "$0", label: "Setup Fee" },
 ];
 
@@ -186,15 +188,15 @@ export default function Home() {
         <div className="max-w-4xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full border border-green/20 bg-green/5 text-green text-[10px] sm:text-xs font-semibold font-mono tracking-wide mb-8 sm:mb-10 animate-fade-up">
             <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-green animate-pulse" />
-            AUTONOMOUS AI SALES AGENTS ON SOLANA
+            AUTONOMOUS AI SALES AGENTS
           </div>
           <h1 className="text-4xl sm:text-5xl md:text-7xl font-black tracking-tighter leading-[1.05] mb-5 sm:mb-6 animate-fade-up delay-100" style={{ opacity: 0 }}>
             Your project deserves<br />
             <span className="gradient-text">customers, not tweets</span>
           </h1>
           <p className="text-base sm:text-lg md:text-xl text-muted max-w-2xl mx-auto mb-8 sm:mb-10 leading-relaxed animate-fade-up delay-200 px-2" style={{ opacity: 0 }}>
-            AI agents that find, qualify, and engage your ideal customers across Moltbook, Farcaster, X, and Discord.
-            Replace your $10k/mo marketing spend. Pay with USDC on Solana.
+            AI agents that find, qualify, and engage your ideal customers across LinkedIn, X, Reddit, Discord, and more.
+            Replace your $10k/mo marketing spend with an agent that works 24/7.
           </p>
           <div className="flex gap-3 sm:gap-4 justify-center flex-wrap animate-fade-up delay-300 px-2" style={{ opacity: 0 }}>
             <Link
@@ -241,19 +243,19 @@ export default function Home() {
               {
                 step: "01",
                 title: "Describe your product",
-                desc: "Tell our agent what you built, who it's for, and what makes it special. Upload your docs, landing page, or just describe it in plain English.",
+                desc: "Tell our agent what you sell, who buys it, and what makes you different. Works for SaaS, ecommerce, agencies, restaurants, crypto projects \u2014 anything.",
                 icon: "\u{1F4DD}",
               },
               {
                 step: "02",
                 title: "Define your ideal customer",
-                desc: "DeFi degens? DAO contributors? NFT collectors? Solana devs? Set your ICP and the agent knows exactly who to target.",
+                desc: "Small business owners? Enterprise buyers? Developers? Crypto traders? Define your audience and the agent targets precisely.",
                 icon: "\u{1F3AF}",
               },
               {
                 step: "03",
                 title: "Agent goes to work",
-                desc: "Your AI agent finds prospects, engages authentically in conversations, shares your product when relevant, and drives them to your site. 24/7.",
+                desc: "Your AI agent finds prospects on LinkedIn, X, Reddit, Discord, and industry forums, engages authentically in conversations, shares your product when relevant, and drives them to your site. 24/7.",
                 icon: "\u26A1",
               },
             ].map((item) => (
@@ -287,7 +289,7 @@ export default function Home() {
                   type="text"
                   value={demoUrl}
                   onChange={(e) => setDemoUrl(e.target.value)}
-                  placeholder="https://your-solana-project.com"
+                  placeholder="https://your-website.com"
                   className="w-full px-4 py-3 rounded-xl bg-surface2 border border-border text-foreground placeholder:text-muted/50 text-sm sm:text-base focus:outline-none focus:border-accent/50 transition-colors"
                 />
               </div>
@@ -391,7 +393,7 @@ export default function Home() {
               },
               {
                 title: "Multi-Platform Presence",
-                desc: "Maintains authentic profiles across Moltbook, Farcaster, X, and Discord simultaneously. Consistent brand voice everywhere.",
+                desc: "Maintains authentic profiles across LinkedIn, X, Reddit, Discord, Moltbook, and Farcaster simultaneously. Consistent brand voice everywhere.",
                 color: "text-green",
               },
               {
@@ -490,21 +492,21 @@ export default function Home() {
       <section className="py-16 sm:py-24 px-4 sm:px-6 border-t border-border">
         <div className="max-w-4xl mx-auto text-center">
           <h2 className="text-2xl sm:text-3xl md:text-5xl font-black tracking-tight mb-3 sm:mb-4">
-            Built on <span className="gradient-text">Solana + x402</span>
+            <span className="gradient-text">Flexible Payments</span>
           </h2>
           <p className="text-muted text-sm sm:text-lg max-w-2xl mx-auto mb-8 sm:mb-12 px-2">
-            Native USDC payments on Solana via x402 protocol. No credit cards, no invoices. Agents pay agents.
+            Pay your way. Credit card or crypto — your choice.
           </p>
           <div className="grid sm:grid-cols-3 gap-4 sm:gap-6">
             <div className="glass rounded-2xl p-5 sm:p-7">
-              <div className="text-2xl mb-2 sm:mb-3">{"💰"}</div>
-              <h3 className="font-bold mb-1.5 sm:mb-2 text-sm sm:text-base">Pay with USDC</h3>
-              <p className="text-muted text-xs sm:text-sm">Subscribe and pay directly with USDC on Solana. No middlemen.</p>
+              <div className="text-2xl mb-2 sm:mb-3">{"💳"}</div>
+              <h3 className="font-bold mb-1.5 sm:mb-2 text-sm sm:text-base">Credit Card</h3>
+              <p className="text-muted text-xs sm:text-sm">Pay with any major credit card via Stripe. Simple monthly billing.</p>
             </div>
             <div className="glass rounded-2xl p-5 sm:p-7">
-              <div className="text-2xl mb-2 sm:mb-3">{"🔗"}</div>
-              <h3 className="font-bold mb-1.5 sm:mb-2 text-sm sm:text-base">On-Chain Receipts</h3>
-              <p className="text-muted text-xs sm:text-sm">Every payment is verifiable on-chain. Full transparency.</p>
+              <div className="text-2xl mb-2 sm:mb-3">{"💰"}</div>
+              <h3 className="font-bold mb-1.5 sm:mb-2 text-sm sm:text-base">USDC on Solana</h3>
+              <p className="text-muted text-xs sm:text-sm">Crypto-native? Pay with USDC on Solana via x402 protocol. No middlemen.</p>
             </div>
             <div className="glass rounded-2xl p-5 sm:p-7">
               <div className="text-2xl mb-2 sm:mb-3">{"🤖"}</div>
@@ -522,7 +524,7 @@ export default function Home() {
             <h2 className="text-2xl sm:text-3xl md:text-5xl font-black tracking-tight mb-3 sm:mb-4">
               Simple, <span className="gradient-text">transparent pricing</span>
             </h2>
-            <p className="text-muted text-sm sm:text-lg">Pay with USDC on Solana. Cancel anytime.</p>
+            <p className="text-muted text-sm sm:text-lg">Start in minutes. Cancel anytime. Pay with card or crypto.</p>
           </div>
 
           <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
@@ -588,11 +590,11 @@ export default function Home() {
               },
               {
                 q: "What platforms are supported?",
-                a: "Moltbook, Farcaster, X/Twitter, and Discord are live right now. Telegram is coming soon. Each platform has its own engagement strategy tailored to how people actually interact there \u2014 threads on X, casts on Farcaster, server conversations on Discord, and so on.",
+                a: "X/Twitter, LinkedIn, Reddit, Discord, Moltbook, and Farcaster are live right now. Telegram is coming soon. Each platform has its own engagement strategy tailored to how people actually interact there \u2014 threads on X, posts on LinkedIn, subreddits on Reddit, casts on Farcaster, server conversations on Discord, and so on.",
               },
               {
                 q: "How do I pay?",
-                a: "USDC on Solana via the x402 protocol. No credit cards, no invoices, no billing departments. Just connect your wallet, choose a plan, and you\u2019re subscribed. Payments are on-chain and fully verifiable.",
+                a: "We accept credit cards via Stripe for simple monthly billing. Crypto-native? You can also pay with USDC on Solana via the x402 protocol. Your choice.",
               },
               {
                 q: "Can I see what the agent is doing?",
@@ -616,7 +618,7 @@ export default function Home() {
             Ready to grow on <span className="gradient-text">autopilot?</span>
           </h2>
           <p className="text-muted text-sm sm:text-lg mb-6 sm:mb-8 max-w-xl mx-auto px-2">
-            Join Solana projects using AI agents to find and convert customers. Set up in 5 minutes.
+            Join thousands of businesses using AI agents to find and convert customers.
           </p>
           <Link
             href="/onboarding"

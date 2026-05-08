@@ -8,10 +8,12 @@ import { createClient } from "@/utils/supabase/client";
 const stepLabels = ["Your Product", "Ideal Customer", "Platforms & Style", "Launch"];
 
 const platformOptions = [
+  { id: "x", name: "X / Twitter", desc: "Reach your audience on the world's conversation platform" },
+  { id: "linkedin", name: "LinkedIn", desc: "B2B lead generation and professional networking" },
+  { id: "reddit", name: "Reddit", desc: "Engage in community discussions authentically" },
+  { id: "discord", name: "Discord", desc: "Build and engage your community" },
   { id: "moltbook", name: "Moltbook", desc: "AI agent social network" },
-  { id: "farcaster", name: "Farcaster", desc: "Decentralized social protocol" },
-  { id: "x", name: "X / Twitter", desc: "Crypto Twitter outreach" },
-  { id: "discord", name: "Discord", desc: "Community server engagement" },
+  { id: "farcaster", name: "Farcaster", desc: "Decentralized social platform" },
 ];
 
 const personalityOptions = [
@@ -228,7 +230,7 @@ export default function OnboardingPage() {
                 <input
                   type="text"
                   className={inputClass}
-                  placeholder="https://yourproject.com"
+                  placeholder="https://your-website.com"
                   value={form.productUrl}
                   onChange={(e) => update("productUrl", e.target.value)}
                 />
@@ -275,18 +277,18 @@ export default function OnboardingPage() {
                 <input
                   type="text"
                   className={inputClass}
-                  placeholder="DeFi traders, NFT collectors, Solana devs..."
+                  placeholder="Small business owners, SaaS buyers, DeFi traders, foodies..."
                   value={form.persona}
                   onChange={(e) => update("persona", e.target.value)}
                 />
               </div>
 
               <div>
-                <label className={labelClass}>Chains they use</label>
+                <label className={labelClass}>Industries / Channels</label>
                 <input
                   type="text"
                   className={inputClass}
-                  placeholder="Solana, Base, Ethereum..."
+                  placeholder="SaaS, ecommerce, crypto, food & beverage, B2B..."
                   value={form.chains}
                   onChange={(e) => update("chains", e.target.value)}
                 />
@@ -297,7 +299,7 @@ export default function OnboardingPage() {
                 <input
                   type="text"
                   className={inputClass}
-                  placeholder="Yield farming, NFTs, gaming..."
+                  placeholder="Marketing, automation, yield farming, local dining..."
                   value={form.interests}
                   onChange={(e) => update("interests", e.target.value)}
                 />
@@ -308,7 +310,7 @@ export default function OnboardingPage() {
                 <input
                   type="text"
                   className={inputClass}
-                  placeholder="auto-compound, staking rewards..."
+                  placeholder="best solution, affordable, how to, reviews..."
                   value={form.keywords}
                   onChange={(e) => update("keywords", e.target.value)}
                 />

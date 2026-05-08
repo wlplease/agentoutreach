@@ -13,11 +13,11 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "AgentOutreach — AI Sales Agents for Solana Projects",
-  description: "Autonomous AI agents that find, qualify, and convert customers for your Solana project. Replace your $10k/mo marketing spend with an AI agent that works 24/7.",
+  title: "AgentOutreach — AI Sales Agents for Any Business",
+  description: "Autonomous AI agents that find, qualify, and convert customers for your business. Works for SaaS, ecommerce, crypto, local businesses. From $199/mo.",
   openGraph: {
-    title: "AgentOutreach — AI Sales Agents for Solana Projects",
-    description: "Autonomous outbound sales agents. $199/mo. 24/7 lead generation across Moltbook, Farcaster, X, and Discord.",
+    title: "AgentOutreach — AI Sales Agents for Any Business",
+    description: "Autonomous AI agents that find, qualify, and convert customers for your business. Works for SaaS, ecommerce, crypto, local businesses. From $199/mo.",
     type: "website",
   },
 };
